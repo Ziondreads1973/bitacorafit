@@ -1,0 +1,8 @@
+/* DEBUG: fuerza habilitar clicks y trae el contenido al frente */
+:host, ion-content, ion-content * {
+  pointer-events: auto !important;
+}
+ion-content {
+  position: relative;
+  z-index: 1; /* por si hay stacking raro */
+}

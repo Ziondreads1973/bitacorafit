@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Measure</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-list-header>Body metrics</ion-list-header>
+    <ion-item button [routerLink]="['/measure/weight-detail']">
+      <ion-label>Weight</ion-label>
+      <ion-note slot="end">89.8 kg</ion-note>
+    </ion-item>
+    <ion-item button>
+      <ion-label>Body fat %</ion-label>
+      <ion-note slot="end">—</ion-note>
+    </ion-item>
+  </ion-list>
+</ion-content>

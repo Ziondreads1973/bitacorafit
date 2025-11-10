@@ -1,0 +1,61 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/history"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ w?.title || 'Workout' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" [fullscreen]="true">
+  <ng-container *ngIf="w as ww; else notFound">
+    <!-- Resumen -->
+    <ion-item lines="none">
+      <ion-label>
+        <p>
+          {{ ww.dateISO | date:'fullDate' }} • {{ ww.durationMin || 0 }} min
+        </p>
+        <h2>Total volume: {{ totalVolume | number:'1.0-0' }} kg</h2>
+        <p *ngIf="ww.kpis?.prs as prs">PRs: {{ prs }}</p>
+      </ion-label>
+    </ion-item>
+
+    <!-- Ejercicios -->
+    <ion-list *ngFor="let ex of exRows; trackBy: trackByExercise">
+      <ion-item lines="full">
+        <ion-label>
+          <h2>{{ ex.name }}</h2>
+          <p>Best est. 1RM: {{ ex.best1RM | number:'1.0-1' }} kg</p>
+        </ion-label>
+      </ion-item>
+
+      <!-- “Tabla” con ion-grid -->
+      <ion-grid>
+        <ion-row class="ion-text-uppercase ion-padding-bottom ion-no-padding">
+          <ion-col size="3"><small>Set</small></ion-col>
+          <ion-col size="3"><small>Kg</small></ion-col>
+          <ion-col size="3"><small>Reps</small></ion-col>
+          <ion-col size="3"><small>1RM</small></ion-col>
+        </ion-row>
+
+        <ion-row
+          *ngFor="let s of ex.sets; let i = index; trackBy: trackBySet"
+          class="ion-align-items-center"
+        >
+          <ion-col size="3">{{ i + 1 }}</ion-col>
+          <ion-col size="3">{{ s.kg | number:'1.0-0' }}</ion-col>
+          <ion-col size="3">{{ s.reps }}</ion-col>
+          <ion-col size="3">{{ s.est1RM | number:'1.0-1' }}</ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-item lines="full"></ion-item>
+    </ion-list>
+  </ng-container>
+
+  <ng-template #notFound>
+    <ion-text color="medium">
+      <p>Workout not found.</p>
+    </ion-text>
+  </ng-template>
+</ion-content>

@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Profile</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/settings']">
+        <ion-icon name="settings-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- User row -->
+  <ion-item button detail="true" [routerLink]="['/profile/edit']">
+    <ion-avatar slot="start">
+      <img src="assets/avatar-placeholder.jpg" alt="avatar">
+    </ion-avatar>
+    <ion-label>
+      <h2>Pablo</h2>
+      <p>249 workouts</p>
+    </ion-label>
+  </ion-item>
+
+  <!-- Dashboard header -->
+  <div class="ion-margin-top ion-margin-bottom" style="display:flex;justify-content:space-between;align-items:center">
+    <h2 style="margin:0">Dashboard</h2>
+    <ion-button size="small" fill="clear">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-button>
+  </div>
+
+  <!-- Widgets (placeholders) -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Workouts per week</ion-card-title>
+      <ion-buttons slot="end">
+        <ion-button fill="clear" size="small">
+          <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text color="medium">Completed workouts will appear here.</ion-text>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Body fat percentage</ion-card-title>
+      <ion-buttons slot="end">
+        <ion-button fill="clear" size="small">
+          <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text color="medium">Not enough recent data for chart.</ion-text>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

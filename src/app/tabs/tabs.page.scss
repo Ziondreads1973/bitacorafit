@@ -1,0 +1,20 @@
+/* --- DEBUG: recuperar clicks en Tabs --- */
+ion-tabs,
+ion-router-outlet {
+  position: static !important;
+  z-index: auto !important;
+  pointer-events: auto !important;
+}
+
+ion-content {
+  position: relative;
+  z-index: 1;               /* asegúrate de estar por encima del outlet */
+  pointer-events: auto;     /* recibir clicks */
+}
+
+/* Si tienes algo global que afecte el outlet, neutralízalo: */
+ion-router-outlet.fullscreen,
+ion-router-outlet.overlay,
+ion-router-outlet.blocking {
+  position: static !important;
+}

@@ -1,0 +1,30 @@
+<ion-tabs>
+  <ion-router-outlet></ion-router-outlet>
+
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="profile" [routerLink]="['/tabs/profile']">
+      <ion-icon name="person-circle-outline"></ion-icon>
+      <ion-label>Profile</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="history" [routerLink]="['/tabs/history']">
+      <ion-icon name="time-outline"></ion-icon>
+      <ion-label>History</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="workout" [routerLink]="['/tabs/workout']">
+      <ion-icon name="add-circle-outline"></ion-icon>
+      <ion-label>Workout</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="exercises" [routerLink]="['/tabs/exercises']">
+      <ion-icon name="barbell-outline"></ion-icon>
+      <ion-label>Exercises</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="measure" [routerLink]="['/tabs/measure']">
+      <ion-icon name="body-outline"></ion-icon>
+      <ion-label>Measure</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

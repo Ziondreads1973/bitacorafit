@@ -1,0 +1,104 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ title }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [disabled]="finishDisabled" (click)="finish()"
+        >Finish</ion-button
+      >
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list *ngFor="let ex of items; let i = index">
+    <ion-item lines="none">
+      <ion-label>
+        <h2>{{ ex.name }}</h2>
+        <p *ngIf="ex.previous">Previous: {{ ex.previous }}</p>
+      </ion-label>
+      <ion-button fill="clear" size="small" color="medium" (click)="addSet(i)"
+        >Add set</ion-button
+      >
+    </ion-item>
+
+    <div class="set-header">
+      <div>SET</div>
+      <div>PREVIOUS</div>
+      <div>KG</div>
+      <div>REPS</div>
+      <div class="chk-col">✓</div>
+    </div>
+
+    <div class="set-row" *ngFor="let s of ex.sets; let j = index">
+      <div class="col index">{{ j + 1 }}</div>
+      <div class="col prev">{{ ex.previous || '—' }}</div>
+
+      <!-- KG: teclado numérico, solo dígitos -->
+      <div class="col">
+        <ion-input
+          type="text"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          autocomplete="off"
+          enterkeyhint="next"
+          [value]="s.kg ?? ''"
+          (ionInput)="onIntInput($event, i, j, 'kg')"
+          (keydown)="allowOnlyDigits($event)"
+          placeholder="0"
+        >
+        </ion-input>
+      </div>
+
+      <!-- REPS: teclado numérico, solo dígitos -->
+      <div class="col">
+        <ion-input
+          type="text"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          autocomplete="off"
+          enterkeyhint="done"
+          [value]="s.reps ?? ''"
+          (ionInput)="onIntInput($event, i, j, 'reps')"
+          (keydown)="allowOnlyDigits($event)"
+          placeholder="0"
+        >
+        </ion-input>
+      </div>
+
+      <div class="col chk-col">
+        <ion-icon
+          #chk
+          [name]="s.done ? 'checkmark-circle' : 'ellipse-outline'"
+          [color]="s.done ? 'success' : 'medium'"
+          (click)="toggleDone(i, j, chk)"
+        >
+        </ion-icon>
+      </div>
+    </div>
+
+    <div class="row-actions">
+      <ion-button fill="clear" color="primary" (click)="addSet(i)"
+        >ADD SET</ion-button
+      >
+      <ion-button
+        fill="clear"
+        color="danger"
+        (click)="removeSet(i, ex.sets.length - 1)"
+        [disabled]="ex.sets.length <= 1"
+      >
+        Remove last
+      </ion-button>
+    </div>
+
+    <ion-item lines="full"></ion-item>
+  </ion-list>
+
+  <div class="bottom-actions">
+    <ion-button expand="block" fill="clear" (click)="addExercise()"
+      >ADD EXERCISE</ion-button
+    >
+    <ion-button expand="block" color="medium" fill="clear" (click)="cancel()"
+      >CANCEL WORKOUT</ion-button
+    >
+  </div>
+</ion-content>

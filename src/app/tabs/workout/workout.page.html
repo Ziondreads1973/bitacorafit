@@ -1,0 +1,49 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Workout</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" [fullscreen]="true">
+  <!-- Botón principal (igual patrón que login) -->
+  <ion-button
+    expand="block"
+    [routerLink]="['/tabs','workout','start']"
+    routerDirection="forward"
+    aria-label="Start an empty workout"
+  >
+    START AN EMPTY WORKOUT
+  </ion-button>
+
+  <ion-list class="ion-margin-top">
+    <ion-list-header>Templates</ion-list-header>
+
+    <!-- Item completo navega al editor -->
+    <ion-item
+      button
+      detail="true"
+      lines="full"
+      [routerLink]="['/tabs','workout','start']"
+      routerDirection="forward"
+      aria-label="Open Push Day template"
+    >
+      <ion-label>
+        <h3>Push Day</h3>
+        <p>Bench Press • Overhead Press • Dips</p>
+      </ion-label>
+
+      <!-- Botón interno con mismo destino; evita doble navegación -->
+      <ion-button
+        slot="end"
+        size="small"
+        fill="outline"
+        [routerLink]="['/tabs','workout','start']"
+        routerDirection="forward"
+        (click)="$event.stopPropagation()"
+        aria-label="Perform Push Day"
+      >
+        Perform
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

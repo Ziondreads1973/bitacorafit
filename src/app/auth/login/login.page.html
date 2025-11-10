@@ -1,0 +1,20 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Sign in</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" [fullscreen]="true">
+  <ion-item lines="none">
+    <ion-label position="stacked">Email</ion-label>
+    <ion-input type="email" placeholder="you@example.com" required></ion-input>
+  </ion-item>
+
+  <ion-button expand="block" class="ion-margin-top" [routerLink]="['/tabs']">
+    Enter
+  </ion-button>
+
+  <ion-text color="medium">
+    <small>Demo login — no password required</small>
+  </ion-text>
+</ion-content>
