@@ -67,10 +67,9 @@
 
       <div class="col chk-col">
         <ion-icon
-          #chk
           [name]="s.done ? 'checkmark-circle' : 'ellipse-outline'"
           [color]="s.done ? 'success' : 'medium'"
-          (click)="toggleDone(i, j, chk)"
+          (click)="toggleDone(i, j, $event)"
         >
         </ion-icon>
       </div>

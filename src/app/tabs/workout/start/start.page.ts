@@ -8,8 +8,18 @@ import {
 } from '@ionic/angular';
 import { DataService, Exercise, WorkoutSession } from 'src/app/core/data';
 
-type SetDraft = { kg: number | null; reps: number | null; done: boolean; valid: boolean };
-type EditorExercise = { id: string; name: string; previous?: string; sets: SetDraft[] };
+type SetDraft = {
+  kg: number | null;
+  reps: number | null;
+  done: boolean;
+  valid: boolean;
+};
+type EditorExercise = {
+  id: string;
+  name: string;
+  previous?: string;
+  sets: SetDraft[];
+};
 
 @Component({
   selector: 'app-start',
@@ -31,7 +41,7 @@ export class StartPage {
   ) {
     // Semilla: intenta bench, si no existe toma el primero disponible o crea uno temporal
     const bench =
-      this.data.exercises.find(e => e.id === 'ex-bench') ||
+      this.data.exercises.find((e) => e.id === 'ex-bench') ||
       this.data.exercises[0] ||
       ({ id: 'ex-temp', name: 'Bench Press', bodyPart: 'Chest' } as Exercise);
 
@@ -53,16 +63,23 @@ export class StartPage {
   }
 
   buildPreviousText(exerciseId: string): string | undefined {
-    const last = this.data.workouts.find(w => w.exercises?.some(e => e.exerciseId === exerciseId));
+    const last = this.data.workouts.find((w) =>
+      w.exercises?.some((e) => e.exerciseId === exerciseId)
+    );
     if (!last) return undefined;
-    const e = last.exercises.find(x => x.exerciseId === exerciseId)!;
+    const e = last.exercises.find((x) => x.exerciseId === exerciseId)!;
     const s = e.sets[e.sets.length - 1];
     return `${s.kg} kg × ${s.reps}`;
   }
 
   // ==== Edición de sets/ejercicios ====
   addSet(ix: number) {
-    this.items[ix].sets.push({ kg: null, reps: null, done: false, valid: false });
+    this.items[ix].sets.push({
+      kg: null,
+      reps: null,
+      done: false,
+      valid: false,
+    });
   }
 
   removeSet(ix: number, jx: number) {
@@ -74,7 +91,9 @@ export class StartPage {
   async addExercise() {
     const buttons: ActionSheetButton[] = this.data.exercises.map((ex) => ({
       text: ex.name,
-      handler: () => { this.items.push(this.newEditorExercise(ex)); } // retorna void (ok)
+      handler: () => {
+        this.items.push(this.newEditorExercise(ex));
+      }, // retorna void (ok)
     }));
     buttons.push({ text: 'Cancel', role: 'cancel' });
 
@@ -83,14 +102,23 @@ export class StartPage {
   }
 
   // Nota: el template pasa #chk (IonIcon). Usamos tipo laxo para evitar error TS con HTMLElement.
-  toggleDone(ix: number, jx: number, el: any) {
+  toggleDone(ix: number, jx: number, ev?: Event) {
     const set = this.items[ix].sets[jx];
     set.valid = this.isValid(set.kg, set.reps);
-    if (!set.valid) { set.done = false; return; }
+    if (!set.valid) {
+      set.done = false;
+      return;
+    }
     set.done = !set.done;
 
-    this.animCtrl.create()
-      .addElement(el as any)
+    // Usa el nodo real del evento (ion-icon)
+    const el =
+      (ev?.currentTarget as HTMLElement) ?? (ev?.target as HTMLElement);
+    if (!el) return; // evita el error si algo raro pasa
+
+    this.animCtrl
+      .create()
+      .addElement(el) // <- ahora es un HTMLElement válido
       .duration(140)
       .keyframes([
         { offset: 0, transform: 'scale(1)' },
@@ -102,7 +130,15 @@ export class StartPage {
 
   // ==== Entrada solo numérica (para ion-input) ====
   allowOnlyDigits(ev: KeyboardEvent) {
-    const allowed = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End'];
+    const allowed = [
+      'Backspace',
+      'Tab',
+      'ArrowLeft',
+      'ArrowRight',
+      'Delete',
+      'Home',
+      'End',
+    ];
     if (allowed.includes(ev.key)) return;
     if (!/^\d$/.test(ev.key)) ev.preventDefault();
   }
@@ -146,7 +182,9 @@ export class StartPage {
 
   get finishDisabled(): boolean {
     if (this.items.length === 0) return true;
-    return !this.items.some(ex => ex.sets.some(s => this.isValid(s.kg, s.reps)));
+    return !this.items.some((ex) =>
+      ex.sets.some((s) => this.isValid(s.kg, s.reps))
+    );
   }
 
   // ==== Guardado / cancelación ====
@@ -155,7 +193,7 @@ export class StartPage {
       const t = await this.toast.create({
         message: 'Please complete at least one valid set',
         duration: 1600,
-        color: 'warning'
+        color: 'warning',
       });
       return t.present();
     }
@@ -165,32 +203,45 @@ export class StartPage {
       id: 'w' + now.getTime(),
       title: this.title?.trim() || 'Workout',
       dateISO: now.toISOString(),
-      durationMin: Math.max(1, Math.round((Date.now() - this.durationStart) / 60000)),
+      durationMin: Math.max(
+        1,
+        Math.round((Date.now() - this.durationStart) / 60000)
+      ),
       kpis: { volumeKg: 0, prs: 0 },
-      exercises: this.items.map(ex => ({
+      exercises: this.items.map((ex) => ({
         exerciseId: ex.id,
         name: ex.name,
         sets: ex.sets
-          .filter(s => this.isValid(s.kg, s.reps))
-          .map(s => ({ kg: Number(s.kg), reps: Number(s.reps) })),
+          .filter((s) => this.isValid(s.kg, s.reps))
+          .map((s) => ({ kg: Number(s.kg), reps: Number(s.reps) })),
       })),
     };
 
     // Σ kg×reps
-    const volumeKg = session.exercises.reduce((sum, e) =>
-      sum + e.sets.reduce((acc, s) => acc + (s.kg * s.reps), 0), 0);
+    const volumeKg = session.exercises.reduce(
+      (sum, e) => sum + e.sets.reduce((acc, s) => acc + s.kg * s.reps, 0),
+      0
+    );
     session.kpis = { ...(session.kpis ?? {}), volumeKg };
 
     this.data.addWorkout(session);
 
-    const t = await this.toast.create({ message: 'Workout saved', duration: 1200, color: 'success' });
+    const t = await this.toast.create({
+      message: 'Workout saved',
+      duration: 1200,
+      color: 'success',
+    });
     await t.present();
 
     this.nav.navigateRoot('/tabs/history');
   }
 
   async cancel() {
-    const t = await this.toast.create({ message: 'Workout discarded', duration: 1000, color: 'medium' });
+    const t = await this.toast.create({
+      message: 'Workout discarded',
+      duration: 1000,
+      color: 'medium',
+    });
     await t.present();
     this.nav.back();
   }
