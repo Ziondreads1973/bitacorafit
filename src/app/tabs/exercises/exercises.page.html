@@ -5,16 +5,55 @@
 </ion-header>
 
 <ion-content>
+  <!-- Refresher para recargar desde la API -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Buscador (por ahora solo visual, luego si quieres lo conectamos a un filtro) -->
   <ion-searchbar placeholder="Search exercises"></ion-searchbar>
-  <ion-list>
-    <ion-item button>
+
+  <!-- Mensaje de error -->
+  <ion-card *ngIf="errorMessage">
+    <ion-card-content> {{ errorMessage }} </ion-card-content>
+  </ion-card>
+
+  <!-- Aviso de modo offline -->
+  <ion-chip color="medium" *ngIf="isOfflineData">
+    Mostrando datos almacenados (modo offline)
+  </ion-chip>
+
+  <!-- Spinner de carga -->
+  <div *ngIf="isLoading" class="center">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <!-- Lista de ejercicios -->
+  <ion-list *ngIf="!isLoading && exercises.length > 0">
+    <ion-list-header>
+      <ion-label>
+        <h2>Recommended exercises</h2>
+        <p>Data fetched from an API and cached locally</p>
+      </ion-label>
+    </ion-list-header>
+
+    <ion-item *ngFor="let ex of exercises">
       <ion-thumbnail slot="start">
-        <ion-img src="assets/exercise-placeholder.jpg" alt="Ab Wheel"></ion-img>
+        <!-- Imagen placeholder genérica -->
+        <ion-img src="assets/exercise-placeholder.jpg" alt="Exercise"></ion-img>
       </ion-thumbnail>
       <ion-label>
-        <h3>Ab Wheel</h3>
-        <p>Core</p>
+        <h3>{{ ex.name }}</h3>
+        <p>{{ ex.description }}</p>
       </ion-label>
     </ion-item>
   </ion-list>
+
+  <!-- Mensaje cuando no hay data y tampoco error -->
+  <div
+    *ngIf="!isLoading && exercises.length === 0 && !errorMessage"
+    class="center"
+  >
+    <ion-text color="medium"> No exercises to show yet. </ion-text>
+  </div>
 </ion-content>

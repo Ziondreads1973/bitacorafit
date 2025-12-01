@@ -13,7 +13,7 @@
   <!-- User row -->
   <ion-item button detail="true" [routerLink]="['/profile/edit']">
     <ion-avatar slot="start">
-      <img src="assets/avatar-placeholder.jpg" alt="avatar">
+      <img src="assets/avatar-placeholder.jpg" alt="avatar" />
     </ion-avatar>
     <ion-label>
       <h2>Pablo</h2>
@@ -22,8 +22,11 @@
   </ion-item>
 
   <!-- Dashboard header -->
-  <div class="ion-margin-top ion-margin-bottom" style="display:flex;justify-content:space-between;align-items:center">
-    <h2 style="margin:0">Dashboard</h2>
+  <div
+    class="ion-margin-top ion-margin-bottom"
+    style="display: flex; justify-content: space-between; align-items: center"
+  >
+    <h2 style="margin: 0">Dashboard</h2>
     <ion-button size="small" fill="clear">
       <ion-icon name="add-outline"></ion-icon>
     </ion-button>
@@ -40,7 +43,7 @@
       </ion-buttons>
     </ion-card-header>
     <ion-card-content>
-      <ion-text color="medium">Completed workouts will appear here.</ion-text>
+      <ion-text color="medium"> Completed workouts will appear here. </ion-text>
     </ion-card-content>
   </ion-card>
 
@@ -54,7 +57,17 @@
       </ion-buttons>
     </ion-card-header>
     <ion-card-content>
-      <ion-text color="medium">Not enough recent data for chart.</ion-text>
+      <ion-text color="medium"> Not enough recent data for chart. </ion-text>
     </ion-card-content>
   </ion-card>
+
+  <!-- Logout -->
+  <ion-list lines="none" class="ion-margin-top">
+    <ion-item>
+      <ion-button expand="block" color="medium" (click)="logout()">
+        <ion-icon slot="start" name="log-out-outline"></ion-icon>
+        Log out
+      </ion-button>
+    </ion-item>
+  </ion-list>
 </ion-content>

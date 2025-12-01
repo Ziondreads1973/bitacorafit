@@ -7,14 +7,19 @@
 <ion-content class="ion-padding" [fullscreen]="true">
   <ion-item lines="none">
     <ion-label position="stacked">Email</ion-label>
-    <ion-input type="email" placeholder="you@example.com" required></ion-input>
+    <ion-input
+      type="email"
+      placeholder="you@example.com"
+      required
+      [(ngModel)]="email"
+    ></ion-input>
   </ion-item>
 
-  <ion-button expand="block" class="ion-margin-top" [routerLink]="['/tabs']">
+  <ion-button expand="block" class="ion-margin-top" (click)="enter()">
     Enter
   </ion-button>
 
   <ion-text color="medium">
-    <small>Demo login — no password required</small>
+    <small>Demo login — email required</small>
   </ion-text>
 </ion-content>

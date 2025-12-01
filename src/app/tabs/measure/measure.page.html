@@ -5,15 +5,98 @@
 </ion-header>
 
 <ion-content>
+  <!-- BODY METRICS -->
   <ion-list>
-    <ion-list-header>Body metrics</ion-list-header>
+    <ion-list-header>
+      <ion-label>
+        <h2>Body metrics</h2>
+        <p>Track your weight and body fat over time</p>
+      </ion-label>
+    </ion-list-header>
+
+    <!-- Peso -->
     <ion-item button [routerLink]="['/measure/weight-detail']">
-      <ion-label>Weight</ion-label>
-      <ion-note slot="end">89.8 kg</ion-note>
+      <ion-label>
+        <h2>Weight</h2>
+
+        <!-- Si hay último peso, lo muestro con fecha -->
+        <p *ngIf="lastWeight; else noWeight">
+          Last: {{ lastWeight.value }} {{ lastWeight.unit || 'kg' }} · {{
+          lastWeight.dateISO | date: 'shortDate' }}
+        </p>
+
+        <!-- Si no hay registros de peso -->
+        <ng-template #noWeight>
+          <p>No weight records yet. Tap to add one.</p>
+        </ng-template>
+      </ion-label>
+
+      <!-- Resumen a la derecha -->
+      <ion-note slot="end">
+        {{ lastWeight ? (lastWeight.value + ' ' + (lastWeight.unit || 'kg')) :
+        '—' }}
+      </ion-note>
     </ion-item>
-    <ion-item button>
-      <ion-label>Body fat %</ion-label>
-      <ion-note slot="end">—</ion-note>
+
+    <!-- Body fat -->
+    <ion-item>
+      <ion-label>
+        <h2>Body fat %</h2>
+
+        <p *ngIf="lastBodyFat; else noBodyFat">
+          Last: {{ lastBodyFat.value }} {{ lastBodyFat.unit || '%' }} · {{
+          lastBodyFat.dateISO | date: 'shortDate' }}
+        </p>
+
+        <ng-template #noBodyFat>
+          <p>No body fat records yet.</p>
+        </ng-template>
+      </ion-label>
+
+      <ion-note slot="end">
+        {{ lastBodyFat ? (lastBodyFat.value + ' ' + (lastBodyFat.unit || '%')) :
+        '—' }}
+      </ion-note>
+    </ion-item>
+  </ion-list>
+
+  <!-- PROGRESS PHOTOS -->
+  <ion-list>
+    <ion-list-header>
+      <ion-label>
+        <h2>Progress photos</h2>
+        <p>Capture your physical changes over time</p>
+      </ion-label>
+    </ion-list-header>
+
+    <ion-item lines="none">
+      <ion-button
+        expand="block"
+        (click)="addProgressPhoto()"
+        [disabled]="isTakingPhoto"
+      >
+        <ion-icon name="camera-outline" slot="start"></ion-icon>
+        Take progress photo
+      </ion-button>
+    </ion-item>
+
+    <!-- Galería de fotos -->
+    <ion-grid *ngIf="progressEntries.length > 0">
+      <ion-row>
+        <ion-col size="6" *ngFor="let p of progressEntries">
+          <ion-card>
+            <img [src]="p.photoData" alt="Progress photo" />
+            <ion-card-content>
+              <h3>{{ p.dateISO | date: 'shortDate' }}</h3>
+              <p *ngIf="p.weight !== undefined">Weight: {{ p.weight }} kg</p>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-item *ngIf="progressEntries.length === 0">
+      <ion-label> No progress photos yet. Take your first one! </ion-label>
     </ion-item>
   </ion-list>
 </ion-content>

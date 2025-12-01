@@ -8,15 +8,20 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { IonicStorageModule } from '@ionic/storage-angular';
+import { HttpClientModule } from '@angular/common/http'; // 👈 import para HttpClient
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(), 
+    IonicModule.forRoot(),
     AppRoutingModule,
 
-    IonicStorageModule.forRoot()
+    // Storage
+    IonicStorageModule.forRoot(),
+
+    // 👇 Necesario para usar HttpClient en ExerciseApiService
+    HttpClientModule,
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
