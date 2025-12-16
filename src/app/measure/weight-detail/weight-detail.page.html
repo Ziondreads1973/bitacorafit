@@ -63,7 +63,7 @@
       <ion-button
         expand="block"
         (click)="addEntry()"
-        [disabled]="isSaving || newValue == null"
+        [disabled]="isSaving || newValue === null"
       >
         Save
       </ion-button>

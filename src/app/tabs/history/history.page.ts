@@ -12,25 +12,22 @@ import { DataService, WorkoutSession } from 'src/app/core/data';
 export class HistoryPage implements OnInit {
   items: WorkoutSession[] = [];
 
-  constructor(
-    private data: DataService,
-    private router: Router
-  ) {}
+  constructor(private data: DataService, private router: Router) {}
 
-  private refresh(): void {
-    // Orden por fecha descendente
-    this.items = [...this.data.workouts].sort(
-      (a, b) => b.dateISO.localeCompare(a.dateISO)
-    );
+  private async refresh(): Promise<void> {
+    // Aseguramos cargar desde la persistencia (SQLite / Storage)
+    await this.data.loadFromStorage();
+    // Usamos el helper del servicio que ya ordena por fecha (desc)
+    this.items = this.data.getAllWorkouts();
   }
 
-  ngOnInit(): void {
-    this.refresh();
+  async ngOnInit(): Promise<void> {
+    await this.refresh();
   }
 
-  ionViewWillEnter(): void {
+  async ionViewWillEnter(): Promise<void> {
     // Se llama cada vez que vuelves a la pestaña
-    this.refresh();
+    await this.refresh();
   }
 
   // Para *ngFor

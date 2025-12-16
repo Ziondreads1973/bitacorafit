@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-edit-profile',
@@ -6,11 +6,6 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./edit-profile.page.scss'],
   standalone: false,
 })
-export class EditProfilePage implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+export class EditProfilePage {
+  // Aquí más adelante puedes inyectar servicios o agregar lógica
 }

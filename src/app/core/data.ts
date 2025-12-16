@@ -1,6 +1,7 @@
 // src/app/core/data.ts
 import { Injectable } from '@angular/core';
 import { StorageService } from './storage';
+import { SqliteService } from './sqlite.service';
 
 export interface Exercise {
   id: string;
@@ -161,20 +162,31 @@ export class DataService {
   private readonly EXERCISES_KEY = 'exerciseCatalog';
   private readonly PROGRESS_KEY = 'progressEntries';
 
-  constructor(private storage: StorageService) {}
+  constructor(private storage: StorageService, private sqlite: SqliteService) {}
 
   /**
-   * Carga inicial desde Storage.
+   * Carga inicial desde la persistencia.
+   * Para workouts:
+   *  - En nativo: lee desde SQLite.
+   *  - En web: usa el fallback de SqliteService (StorageService).
+   * Para el resto: sigue usando StorageService directo.
    * Si no hay nada guardado, se mantienen los seeds definidos arriba.
    */
   async loadFromStorage(): Promise<void> {
-    const storedWorkouts = await this.storage.get<WorkoutSession[]>(
-      this.WORKOUTS_KEY
-    );
-    if (storedWorkouts && storedWorkouts.length > 0) {
-      this._workouts = storedWorkouts;
+    // Workouts desde persistencia nativa (SQLite o fallback)
+    try {
+      const storedWorkouts = await this.sqlite.getAllWorkouts();
+      if (storedWorkouts && storedWorkouts.length > 0) {
+        this._workouts = storedWorkouts as WorkoutSession[];
+      }
+    } catch (err) {
+      console.warn(
+        '[DataService] No se pudieron cargar workouts desde SQLite; se usan seeds en memoria',
+        err
+      );
     }
 
+    // Measurements desde Storage
     const storedMeasurements = await this.storage.get<MeasurementEntry[]>(
       this.MEASUREMENTS_KEY
     );
@@ -187,17 +199,6 @@ export class DataService {
 
     // Progreso con fotos
     await this.loadProgressFromStorage();
-  }
-
-  private async persistWorkouts(): Promise<void> {
-    await this.storage.set<WorkoutSession[]>(this.WORKOUTS_KEY, this._workouts);
-  }
-
-  private async persistMeasurements(): Promise<void> {
-    await this.storage.set<MeasurementEntry[]>(
-      this.MEASUREMENTS_KEY,
-      this._measurements
-    );
   }
 
   // ====== Getters simples ======
@@ -239,7 +240,7 @@ export class DataService {
     return this._workouts.find((w) => w.id === id) ?? null;
   }
 
-  /** Tu versión original; la dejo por compatibilidad */
+  /** Versión original; se mantiene por compatibilidad */
   getWorkoutById(id: string): WorkoutSession | null {
     return this.findWorkoutById(id);
   }
@@ -252,15 +253,35 @@ export class DataService {
   }
 
   // ====== Mutadores ======
+
+  /**
+   * Agrega un workout:
+   *  - Actualiza el array en memoria (para que la UI se refresque inmediato).
+   *  - Persiste en SQLite (o, en web, en Storage a través de SqliteService).
+   *
+   * Se mantiene firma sync (void) para no romper los llamados existentes;
+   * la persistencia se hace de forma asíncrona en segundo plano.
+   */
   addWorkout(ws: WorkoutSession): void {
     // prepend para que lo último quede arriba
     this._workouts = [ws, ...this._workouts];
-    void this.persistWorkouts(); // guardamos cambios en Storage
+    // Guardamos en la capa de persistencia nativa (SQLite / fallback)
+    void this.sqlite.insertWorkout(ws);
   }
 
   addMeasurement(entry: MeasurementEntry): void {
     this._measurements = [...this._measurements, entry];
     void this.persistMeasurements(); // guardamos cambios en Storage
+  }
+
+  /**
+   * Persiste el arreglo de measurements en Storage.
+   */
+  private async persistMeasurements(): Promise<void> {
+    await this.storage.set<MeasurementEntry[]>(
+      this.MEASUREMENTS_KEY,
+      this._measurements
+    );
   }
 
   /**

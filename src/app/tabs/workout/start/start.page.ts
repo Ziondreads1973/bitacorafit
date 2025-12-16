@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   ActionSheetButton,
   ActionSheetController,
@@ -14,6 +14,7 @@ type SetDraft = {
   done: boolean;
   valid: boolean;
 };
+
 type EditorExercise = {
   id: string;
   name: string;
@@ -27,7 +28,7 @@ type EditorExercise = {
   styleUrls: ['./start.page.scss'],
   standalone: false,
 })
-export class StartPage {
+export class StartPage implements OnInit {
   title = 'Evening Workout';
   durationStart = Date.now();
   items: EditorExercise[] = [];
@@ -38,8 +39,16 @@ export class StartPage {
     private toast: ToastController,
     private sheet: ActionSheetController,
     private animCtrl: AnimationController
-  ) {
-    // Semilla: intenta bench, si no existe toma el primero disponible o crea uno temporal
+  ) {}
+
+  async ngOnInit(): Promise<void> {
+    // Nos aseguramos de cargar desde la persistencia (SQLite / Storage)
+    // antes de construir el ejercicio semilla, para que "previous"
+    // considere también los entrenos guardados anteriormente.
+    await this.data.loadFromStorage();
+
+    // Semilla: intenta bench, si no existe toma el primero disponible
+    // o crea uno temporal
     const bench =
       this.data.exercises.find((e) => e.id === 'ex-bench') ||
       this.data.exercises[0] ||
@@ -93,7 +102,7 @@ export class StartPage {
       text: ex.name,
       handler: () => {
         this.items.push(this.newEditorExercise(ex));
-      }, // retorna void (ok)
+      },
     }));
     buttons.push({ text: 'Cancel', role: 'cancel' });
 
@@ -111,14 +120,13 @@ export class StartPage {
     }
     set.done = !set.done;
 
-    // Usa el nodo real del evento (ion-icon)
     const el =
       (ev?.currentTarget as HTMLElement) ?? (ev?.target as HTMLElement);
-    if (!el) return; // evita el error si algo raro pasa
+    if (!el) return;
 
     this.animCtrl
       .create()
-      .addElement(el) // <- ahora es un HTMLElement válido
+      .addElement(el)
       .duration(140)
       .keyframes([
         { offset: 0, transform: 'scale(1)' },
@@ -148,13 +156,10 @@ export class StartPage {
     const digits = raw.replace(/\D+/g, '');
     let num: number | null = digits === '' ? null : Number(digits);
 
-    // Reglas rápidas (puedes ajustar):
     if (field === 'reps' && num !== null) {
-      // reps entre 1 y 100
       num = Math.max(1, Math.min(100, num));
     }
     if (field === 'kg' && num !== null) {
-      // kg no negativo (sin tope superior por ahora)
       num = Math.max(0, num);
     }
 
@@ -217,13 +222,13 @@ export class StartPage {
       })),
     };
 
-    // Σ kg×reps
     const volumeKg = session.exercises.reduce(
       (sum, e) => sum + e.sets.reduce((acc, s) => acc + s.kg * s.reps, 0),
       0
     );
     session.kpis = { ...(session.kpis ?? {}), volumeKg };
 
+    // DataService ahora persiste en SQLite (o fallback) internamente
     this.data.addWorkout(session);
 
     const t = await this.toast.create({
