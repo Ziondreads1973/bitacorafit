@@ -11,22 +11,22 @@
 
 <ion-content class="ion-padding">
   <ion-list *ngFor="let ex of items; let i = index">
-    <ion-item lines="none">
+    <ion-item lines="none" class="exercise-header">
       <ion-label>
         <h2>{{ ex.name }}</h2>
         <p *ngIf="ex.previous">Previous: {{ ex.previous }}</p>
       </ion-label>
-      <ion-button fill="clear" size="small" color="medium" (click)="addSet(i)"
-        >Add set</ion-button
-      >
+      <ion-button fill="clear" size="small" color="medium" (click)="addSet(i)">
+        Add set
+      </ion-button>
     </ion-item>
 
     <div class="set-header">
-      <div>SET</div>
-      <div>PREVIOUS</div>
-      <div>KG</div>
-      <div>REPS</div>
-      <div class="chk-col">✓</div>
+      <div class="hdr-left">SET</div>
+      <div class="hdr-left">PREVIOUS</div>
+      <div class="hdr-center">KG</div>
+      <div class="hdr-center">REPS</div>
+      <div class="chk-col hdr-center">✓</div>
     </div>
 
     <div class="set-row" *ngFor="let s of ex.sets; let j = index">
@@ -96,8 +96,8 @@
     <ion-button expand="block" fill="clear" (click)="addExercise()"
       >ADD EXERCISE</ion-button
     >
-    <ion-button expand="block" color="medium" fill="clear" (click)="cancel()"
-      >CANCEL WORKOUT</ion-button
-    >
+    <ion-button expand="block" color="medium" fill="clear" (click)="cancel()">
+      CANCEL WORKOUT
+    </ion-button>
   </div>
 </ion-content>

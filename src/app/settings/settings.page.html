@@ -1,13 +1,91 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>settings</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/profile"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Ajustes</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">settings</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <!-- Cuenta -->
+  <ion-list inset="true">
+    <ion-list-header>
+      <ion-label>Cuenta</ion-label>
+    </ion-list-header>
+
+    <ion-item lines="full">
+      <ion-icon name="mail-outline" slot="start"></ion-icon>
+      <ion-label>Email</ion-label>
+      <ion-note slot="end">{{ email || '-' }}</ion-note>
+    </ion-item>
+
+    <ion-item button lines="none" (click)="logout()">
+      <ion-icon name="log-out-outline" slot="start"></ion-icon>
+      <ion-label>Cerrar sesión</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- Preferencias -->
+  <ion-list inset="true">
+    <ion-list-header>
+      <ion-label>Preferencias</ion-label>
+    </ion-list-header>
+
+    <ion-item lines="full">
+      <ion-icon name="moon-outline" slot="start"></ion-icon>
+      <ion-label>Modo oscuro</ion-label>
+      <ion-toggle
+        slot="end"
+        [checked]="settings.darkMode"
+        (ionChange)="onDarkModeChange($event)"
+      ></ion-toggle>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-icon name="speedometer-outline" slot="start"></ion-icon>
+      <ion-label>Unidades</ion-label>
+      <ion-select
+        slot="end"
+        [value]="settings.units"
+        (ionChange)="onUnitsChange($event)"
+      >
+        <ion-select-option value="kg">KG</ion-select-option>
+        <ion-select-option value="lb">LB</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-icon name="accessibility-outline" slot="start"></ion-icon>
+      <ion-label>Reducir animaciones</ion-label>
+      <ion-toggle
+        slot="end"
+        [checked]="settings.reduceMotion"
+        (ionChange)="onReduceMotionChange($event)"
+      ></ion-toggle>
+    </ion-item>
+
+    <ion-item button lines="none" (click)="resetPreferences()">
+      <ion-icon name="refresh-outline" slot="start"></ion-icon>
+      <ion-label>Restablecer preferencias</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- Información -->
+  <ion-list inset="true">
+    <ion-list-header>
+      <ion-label>Información</ion-label>
+    </ion-list-header>
+
+    <ion-item lines="full">
+      <ion-icon name="information-circle-outline" slot="start"></ion-icon>
+      <ion-label>Aplicación</ion-label>
+      <ion-note slot="end">{{ appName }} {{ appVersionLabel }}</ion-note>
+    </ion-item>
+
+    <ion-item button lines="none" (click)="showAbout()">
+      <ion-icon name="document-text-outline" slot="start"></ion-icon>
+      <ion-label>Acerca de</ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

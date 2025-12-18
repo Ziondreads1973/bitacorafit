@@ -1,36 +1,117 @@
-.set-header, .set-row {
-  display: grid;
-  grid-template-columns: 52px 1fr 120px 120px 40px;
-  column-gap: 10px;
-  align-items: center;
-  padding: 6px 0;
+/* Header del ejercicio (nombre + previous) */
+ion-item.exercise-header {
+  /* antes estaba en 0; ahora le damos margen lateral */
+  --padding-start: 10px;
+  --inner-padding-end: 10px;
+
+  ion-label {
+    min-width: 0;
+  }
+
+  h2 {
+    font-size: 14px;
+    margin: 0 0 2px 0;
+  }
+
+  p {
+    font-size: 11px;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
+/* Tabla (header + filas): ahora con padding lateral */
+.set-header,
+.set-row {
+  display: grid;
+
+  /* SET | PREVIOUS | KG | REPS | CHECK */
+  /* OJO: minmax corregido; ajusta el 120px si quieres más/menos ancho */
+  grid-template-columns: 28px minmax(96px, 120px) 50px 50px 26px;
+
+  column-gap: 5px;
+  align-items: center;
+  justify-content: start;
+
+  /* margen interno izquierda/derecha */
+  padding: 3px 10px;
+}
+
+/* Encabezados */
 .set-header {
-  font-size: 12px;
+  font-size: 10px;
   color: var(--ion-color-medium);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
 }
 
+.hdr-left {
+  text-align: left;
+}
+
+.hdr-center {
+  text-align: center;
+}
+
+/* Filas */
+.set-row {
+  font-size: 12px;
+}
+
+.set-row .index {
+  font-size: 12px;
+}
+
+/* PREVIOUS en una sola línea */
+.set-row .prev {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Inputs más compactos */
 .set-row .col ion-input {
-  --padding-start: 8px;
-  --padding-end: 8px;
+  --padding-start: 4px;
+  --padding-end: 4px;
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+
+  text-align: center;
+  font-size: 12px;
+
   background: var(--ion-color-light, #f4f5f8);
   border-radius: 10px;
 }
 
+/* Check/círculo: más a la derecha */
 .chk-col {
-  text-align: center;
+  display: flex;
+  justify-content: flex-end;   /* clave: lo empuja a la derecha */
+  align-items: center;
+  padding-right: 2px;          /* micro-ajuste hacia el borde */
 }
 
+.set-header .chk-col {
+  justify-content: center;     /* el ✓ del header se ve mejor centrado */
+  padding-right: 0;
+}
+
+.set-row .chk-col ion-icon {
+  font-size: 20px;
+}
+
+/* Botones: mismo margen lateral que la tabla */
 .row-actions {
   display: flex;
   justify-content: flex-start;
   gap: 8px;
-  padding: 6px 0 12px;
+
+  padding: 6px 10px 12px; /* agrega margen izq/der */
 }
 
 .bottom-actions {
   margin-top: 18px;
+  padding: 0 10px; /* margen izq/der */
 }

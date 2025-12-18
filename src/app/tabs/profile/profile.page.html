@@ -11,7 +11,7 @@
 
 <ion-content class="ion-padding">
   <!-- User row -->
-  <ion-item button detail="true" [routerLink]="['/profile/edit']">
+  <ion-item button detail="true" [routerLink]="['/edit-profile']">
     <ion-avatar slot="start">
       <img src="assets/avatar-placeholder.jpg" alt="avatar" />
     </ion-avatar>
@@ -27,35 +27,35 @@
     style="display: flex; justify-content: space-between; align-items: center"
   >
     <h2 style="margin: 0">Dashboard</h2>
-    <ion-button size="small" fill="clear">
+    <ion-button size="small" fill="clear" [routerLink]="['/tabs/workout']">
       <ion-icon name="add-outline"></ion-icon>
     </ion-button>
   </div>
 
   <!-- Widgets (placeholders) -->
   <ion-card>
-    <ion-card-header>
-      <ion-card-title>Workouts per week</ion-card-title>
-      <ion-buttons slot="end">
-        <ion-button fill="clear" size="small">
-          <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-card-header>
+    <ion-item lines="none">
+      <ion-label>
+        <ion-card-title>Workouts per week</ion-card-title>
+      </ion-label>
+      <ion-button fill="clear" size="small" slot="end">
+        <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
     <ion-card-content>
       <ion-text color="medium"> Completed workouts will appear here. </ion-text>
     </ion-card-content>
   </ion-card>
 
   <ion-card>
-    <ion-card-header>
-      <ion-card-title>Body fat percentage</ion-card-title>
-      <ion-buttons slot="end">
-        <ion-button fill="clear" size="small">
-          <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-card-header>
+    <ion-item lines="none">
+      <ion-label>
+        <ion-card-title>Body fat percentage</ion-card-title>
+      </ion-label>
+      <ion-button fill="clear" size="small" slot="end">
+        <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
     <ion-card-content>
       <ion-text color="medium"> Not enough recent data for chart. </ion-text>
     </ion-card-content>
@@ -63,7 +63,7 @@
 
   <!-- Logout -->
   <ion-list lines="none" class="ion-margin-top">
-    <ion-item>
+    <ion-item lines="none">
       <ion-button expand="block" color="medium" (click)="logout()">
         <ion-icon slot="start" name="log-out-outline"></ion-icon>
         Log out

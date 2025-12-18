@@ -1,13 +1,113 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>edit-profile</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()">
+        <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+        Volver
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Editar perfil</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button [disabled]="saving" (click)="save()">
+        <ion-icon slot="start" name="save-outline"></ion-icon>
+        Guardar
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">edit-profile</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <div class="avatar-wrap">
+    <ion-avatar class="avatar">
+      <img
+        [src]="avatarPreview || 'assets/avatar-placeholder.jpg'"
+        alt="avatar"
+      />
+    </ion-avatar>
+
+    <div class="avatar-actions">
+      <ion-button size="small" (click)="takeAvatar()">
+        <ion-icon slot="start" name="camera-outline"></ion-icon>
+        Cambiar foto
+      </ion-button>
+
+      <ion-button
+        size="small"
+        fill="outline"
+        color="medium"
+        (click)="removeAvatar()"
+        [disabled]="!avatarPreview"
+      >
+        Quitar
+      </ion-button>
+    </div>
+  </div>
+
+  <form [formGroup]="form">
+    <ion-list inset="true">
+      <ion-item>
+        <ion-label position="stacked">Nombre</ion-label>
+        <ion-input
+          formControlName="displayName"
+          placeholder="Ej: Pablo"
+        ></ion-input>
+      </ion-item>
+      <ion-note
+        color="danger"
+        class="error"
+        *ngIf="form.get('displayName')?.touched && form.get('displayName')?.invalid"
+      >
+        El nombre es obligatorio (mínimo 2 caracteres).
+      </ion-note>
+
+      <ion-item>
+        <ion-label position="stacked">Email (sesión)</ion-label>
+        <ion-input formControlName="email" readonly="true"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Altura (cm)</ion-label>
+        <ion-input
+          type="number"
+          formControlName="heightCm"
+          placeholder="Ej: 175"
+        ></ion-input>
+      </ion-item>
+      <ion-note
+        color="danger"
+        class="error"
+        *ngIf="form.get('heightCm')?.touched && form.get('heightCm')?.invalid"
+      >
+        Altura válida entre 50 y 250 cm.
+      </ion-note>
+
+      <ion-item>
+        <ion-label position="stacked">Peso objetivo (kg)</ion-label>
+        <ion-input
+          type="number"
+          formControlName="goalWeightKg"
+          placeholder="Ej: 82"
+        ></ion-input>
+      </ion-item>
+      <ion-note
+        color="danger"
+        class="error"
+        *ngIf="form.get('goalWeightKg')?.touched && form.get('goalWeightKg')?.invalid"
+      >
+        Peso objetivo válido entre 20 y 300 kg.
+      </ion-note>
+    </ion-list>
+
+    <ion-button
+      expand="block"
+      class="ion-margin-top"
+      [disabled]="saving"
+      (click)="save()"
+    >
+      <ion-icon slot="start" name="save-outline"></ion-icon>
+      Guardar cambios
+    </ion-button>
+  </form>
 </ion-content>

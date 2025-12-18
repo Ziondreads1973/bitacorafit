@@ -5,21 +5,53 @@
 </ion-header>
 
 <ion-content class="ion-padding" [fullscreen]="true">
-  <ion-item lines="none">
-    <ion-label position="stacked">Email</ion-label>
-    <ion-input
-      type="email"
-      placeholder="you@example.com"
-      required
-      [(ngModel)]="email"
-    ></ion-input>
-  </ion-item>
+  <form class="login-card" #loginCard (ngSubmit)="enter()">
+    <ion-item lines="none">
+      <ion-label position="stacked">Email</ion-label>
+      <ion-input
+        data-testid="login-email"
+        name="email"
+        type="email"
+        inputmode="email"
+        autocomplete="email"
+        placeholder="you@example.com"
+        required
+        [(ngModel)]="email"
+        [disabled]="isLoggingIn"
+      ></ion-input>
+    </ion-item>
 
-  <ion-button expand="block" class="ion-margin-top" (click)="enter()">
-    Enter
-  </ion-button>
+    <ion-item lines="none">
+      <ion-label position="stacked">Password</ion-label>
+      <ion-input
+        data-testid="login-password"
+        name="password"
+        type="password"
+        autocomplete="current-password"
+        placeholder="••••••"
+        required
+        [(ngModel)]="password"
+        [disabled]="isLoggingIn"
+      ></ion-input>
+    </ion-item>
 
-  <ion-text color="medium">
-    <small>Demo login — email required</small>
-  </ion-text>
+    <ion-button
+      data-testid="login-submit"
+      type="submit"
+      expand="block"
+      class="ion-margin-top"
+      [disabled]="isLoggingIn"
+    >
+      <ion-spinner
+        *ngIf="isLoggingIn"
+        name="crescent"
+        slot="start"
+      ></ion-spinner>
+      {{ isLoggingIn ? 'Signing in...' : 'Enter' }}
+    </ion-button>
+
+    <ion-text color="medium">
+      <small>Demo login — email + password required</small>
+    </ion-text>
+  </form>
 </ion-content>
